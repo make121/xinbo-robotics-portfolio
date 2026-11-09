@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="辛波的足式机器人作品集。OMoE 统一运动控制、PBHC 多技能切换与 Walk These Ways 策略迁移。">
+  <meta name="robots" content="noindex">
+  <title>辛波 · 机器人强化学习与运动控制</title>
+  <link rel="stylesheet" href="portfolio.css">
+  <script defer src="portfolio.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到作品内容</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="wordmark" href="#top">辛波 <span>XIN BO</span></a>
+      <nav aria-label="作品导航">
+        <a href="#omoe">统一控制</a><a href="#pbhc">多技能切换</a><a href="#wtw">策略迁移</a>
+      </nav>
+      <a class="pdf-link" href="portfolio.pdf" download="辛波_机器人作品集.pdf">下载 PDF <span aria-hidden="true">↓</span></a>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero wrap" id="top" aria-labelledby="title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> ROBOTICS PORTFOLIO</div>
+        <h1 id="title">机器人强化学习<br>与运动控制</h1>
+        <p class="profile">辛波 <span>浙江工业大学 · 控制科学与工程 · 2027 届硕士</span></p>
+        <p class="lead">面向足式机器人，开展统一策略设计、仿真训练和 Go2 机载部署。作品覆盖异构步态控制、人形多技能调度与跨平台策略迁移。</p>
+        <a class="primary" href="#omoe">查看项目 <span aria-hidden="true">↘</span></a>
+      </div>
+      <figure class="hero-demo" id="demo">
+        <div class="video-head"><span><i class="live-dot"></i> 实机部署</span><span>UNITREE GO2</span></div>
+        <video controls playsinline preload="none" poster="media/go2-main.jpg" src="media/go2-main.mp4" aria-label="Go2 实机部署主视频"></video>
+        <figcaption><span>四足与双足运动 · 模式切换 · 地形通过</span><span>1:51 / 1080p</span></figcaption>
+      </figure>
+      <div class="hero-index" aria-label="项目索引">
+        <a href="#omoe"><b>01</b><span>OMoE 统一多任务控制</span><i>↗</i></a>
+        <a href="#pbhc"><b>02</b><span>PBHC 多技能切换</span><i>↗</i></a>
+        <a href="#wtw"><b>03</b><span>Walk These Ways 迁移</span><i>↗</i></a>
+      </div>
+    </section>
+
+    <section class="project wrap" id="omoe" aria-labelledby="omoe-title">
+      <div class="section-index"><span>01 / 03</span><span>RESEARCH · SIM2REAL</span></div>
+      <div class="project-intro">
+        <div><div class="eyebrow">2025.03 — 2025.12 · 硕士课题</div>
+          <h2 id="omoe-title">OMoE 统一多任务运动控制</h2>
+          <p>在一个策略中控制 Go2 的四足与双足步态。我负责方法设计、策略训练和真机部署，重点解决多任务专家特征重叠，以及仿真特权信息在实机上不可直接获得的问题。</p>
+        </div>
+        <div class="project-facts"><span>平台</span><strong>Isaac Gym / Unitree Go2</strong><span>部署</span><strong>Jetson Orin · 50 Hz</strong></div>
+      </div>
+
+      <div class="subhead"><span>01A</span><h3>策略结构与特征解耦</h3></div>
+      <div class="method-grid">
+        <figure class="diagram wide-diagram">
+          <button class="figure-open" type="button" data-zoom="media/omoe-pipeline.png" data-caption="OMoE 统一策略结构">
+            <img src="media/omoe-pipeline.png" width="5732" height="1265" loading="lazy" alt="输入经状态估计和 LSTM 后进入门控与三个专家，专家潜在特征正交化后加权融合">
+          </button>
+          <figcaption>统一策略结构 <span>点击放大 ↗</span></figcaption>
+        </figure>
+        <div class="explainer">
+          <h4>三个专家，共用一套策略</h4>
+          <p>门控按任务组合专家输出。在专家潜在空间加入可微 Gram–Schmidt 正交化，降低异构步态之间的特征冗余。</p>
+          <h4>两阶段状态估计</h4>
+          <p>先预训练特权状态估计器，再联合适应。训练时用 PAS 概率退火逐步把真值替换为估计结果，部署时仅使用机载本体感知。</p>
+        </div>
+        <figure class="diagram">
+          <button class="figure-open" type="button" data-zoom="media/expert-similarity.svg" data-caption="基线 MoE 与 OMoE 的 GS 层前余弦相似度">
+            <img src="media/expert-similarity.svg" width="1328" height="682" loading="lazy" alt="专家特征最大非对角绝对余弦相似度从基线 MoE 的 0.76 降至 OMoE 在 GS 层前的 0.14">
+          </button>
+          <figcaption>专家特征余弦相似度 <span>点击放大 ↗</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="subhead"><span>01B</span><h3>仿真验证</h3></div>
+      <div class="result-band">
+        <div><strong>90.3<span>%</span></strong><small>OMoE 双足下楼梯</small></div>
+        <div><strong>48.7<span>%</span></strong><small>MoE 对照</small></div>
+        <p>双足分布外仿真。地形类型与训练一致，测试难度更高，每类地形测试 300 次。这里展示的是下楼梯任务成功率。</p>
+      </div>
+      <div class="two-up">
+        <figure class="diagram"><button class="figure-open" type="button" data-zoom="media/episode-length.png" data-caption="训练平均回合长度"><img src="media/episode-length.png" width="2366" height="1167" alt="OMoE、MoE 和 MLP 的平均回合长度曲线" loading="lazy"></button><figcaption>训练平均回合长度 <span>↗</span></figcaption></figure>
+        <figure class="diagram"><button class="figure-open" type="button" data-zoom="media/reward.png" data-caption="训练平均奖励"><img src="media/reward.png" width="2365" height="1317" alt="OMoE、MoE 和 MLP 的平均奖励曲线" loading="lazy"></button><figcaption>训练平均奖励 <span>↗</span></figcaption></figure>
+      </div>
+      <details class="evidence">
+        <summary>查看专家诊断与地形设置</summary>
+        <div class="evidence-body">
+          <figure class="diagram"><button class="figure-open" type="button" data-zoom="media/expert-health.svg" data-caption="专家健康度分析"><img src="media/expert-health.svg" width="1037" height="751" alt="门控权重、GS 保留率、输出幅度和梯度范数" loading="lazy"></button><figcaption>专家健康度分析 <span>↗</span></figcaption></figure>
+          <div class="terrain">
+            <figure class="diagram"><button class="figure-open" type="button" data-zoom="media/terrain-limits.png" data-caption="仿真地形难度范围"><img src="media/terrain-limits.png" width="3523" height="1263" alt="仿真楼梯、斜坡和崎岖地形难度范围" loading="lazy"></button><figcaption>仿真地形难度范围 <span>↗</span></figcaption></figure>
+            <figure class="diagram"><button class="figure-open" type="button" data-zoom="media/mixed-terrain.png" data-caption="混合地形仿真设置"><img src="media/mixed-terrain.png" width="3899" height="910" alt="崎岖路段、斜坡和台阶构成的混合地形布局" loading="lazy"></button><figcaption>混合地形仿真设置 <span>↗</span></figcaption></figure>
+          </div>
+        </div>
+      </details>
+
+      <div class="subhead"><span>01C</span><h3>真机部署与运动表现</h3></div>
+      <p class="section-copy">策略在 Jetson Orin 上运行，以 50 Hz 控制频率驱动 Go2 底层 PD。实机验证覆盖四足与双足模式切换，以及崎岖地面、斜坡和下楼梯。</p>
+      <div class="field-gallery">
+        <figure><button class="figure-open" type="button" data-zoom="media/biped-ramp.png" data-caption="室内双足斜台"><img src="media/biped-ramp.png" width="2310" height="1300" alt="Go2 双足通过室内斜台的连续姿态叠帧" loading="lazy"></button><figcaption>双足斜台</figcaption></figure>
+        <figure><button class="figure-open" type="button" data-zoom="media/biped-stairs.png" data-caption="室内双足下楼梯"><img src="media/biped-stairs.png" width="1499" height="1300" alt="Go2 双足下楼梯的连续姿态叠帧" loading="lazy"></button><figcaption>双足下楼梯</figcaption></figure>
+        <figure><button class="figure-open" type="button" data-zoom="media/quadruped-ramp.png" data-caption="室内四足斜台"><img src="media/quadruped-ramp.png" width="2355" height="1327" alt="Go2 四足通过斜台的连续姿态叠帧" loading="lazy"></button><figcaption>四足斜台</figcaption></figure>
+        <figure><button class="figure-open" type="button" data-zoom="media/quadruped-stairs.png" data-caption="室内四足台阶"><img src="media/quadruped-stairs.png" width="1952" height="1300" alt="Go2 四足通过台阶的连续姿态叠帧" loading="lazy"></button><figcaption>四足台阶</figcaption></figure>
+      </div>
+      <div class="subhead"><span>FIELD NOTES</span><h3>室外短片</h3></div>
+      <div class="clip-grid">
+        <figure><video controls playsinline preload="none" poster="media/switch.jpg" src="media/switch.mp4" aria-label="室外四足转双足"></video><figcaption>四足转双足 <span>约 4 秒</span></figcaption></figure>
+        <figure><video controls playsinline preload="none" poster="media/stairs.jpg" src="media/stairs.mp4" aria-label="室外双足下台阶"></video><figcaption>双足下台阶 <span>约 6 秒</span></figcaption></figure>
+        <figure><video controls playsinline preload="none" poster="media/slope.jpg" src="media/slope.mp4" aria-label="室外双足上坡"></video><figcaption>双足上坡 <span>约 8 秒</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section class="project wrap" id="pbhc" aria-labelledby="pbhc-title">
+      <div class="section-index"><span>02 / 03</span><span>INTERNSHIP · SIMULATION</span></div>
+      <div class="project-intro">
+        <div><div class="eyebrow">2026.03 — 2026.06 · 江苏汇博</div>
+          <h2 id="pbhc-title">PBHC 多技能学习与在线切换</h2>
+          <p>负责技能图、跨技能训练和在线调度。工作从双技能实验扩展到多技能连续切换，在 Isaac Gym 与 PBHC 中完成验证。</p>
+        </div>
+        <div class="project-facts"><span>角色</span><strong>强化学习算法实习生</strong><span>验证范围</span><strong>人形机器人仿真</strong></div>
+      </div>
+      <div class="pbhc-grid">
+        <figure class="hero-demo">
+          <div class="video-head"><span><i class="live-dot"></i> 仿真</span><span>ISAAC GYM / PBHC</span></div>
+          <video controls playsinline preload="none" poster="media/pbhc.jpg" src="media/pbhc.mp4" aria-label="PBHC 仿真多技能切换视频"></video>
+          <figcaption><span>舞蹈 → 拳击 → 行走 → 拳击</span><span>0:29</span></figcaption>
+        </figure>
+        <ol class="method-steps">
+          <li><strong>技能图构建</strong><p>组织技能状态与过渡数据，以 L1 状态距离匹配候选节点。</p></li>
+          <li><strong>预采样过渡轨迹</strong><p>将预采样的切换轨迹纳入训练，改善随机节点切换导致的过渡覆盖不足。</p></li>
+          <li><strong>在线调度</strong><p>通过反向多源 Dijkstra 生成跨技能参考轨迹，衔接技能选择与策略执行。</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="project wrap" id="wtw" aria-labelledby="wtw-title">
+      <div class="section-index"><span>03 / 03</span><span>ENGINEERING · TRANSFER</span></div>
+      <div class="project-intro">
+        <div><div class="eyebrow">2024.11 — 2025.01 · 工程项目</div>
+          <h2 id="wtw-title">Walk These Ways 策略迁移</h2>
+          <p>将 Go1 预训练策略适配到 Go2，负责跨平台接口、控制链路和有线／无线部署调试。</p>
+        </div>
+        <div class="project-facts"><span>迁移对象</span><strong>Unitree Go1 → Go2</strong><span>实测速度</span><strong>−1 至 1 m/s</strong></div>
+      </div>
+      <ol class="transfer">
+        <li><b>01</b><strong>策略适配</strong><p>适配 Go2 模型及策略调用。</p></li>
+        <li><b>02</b><strong>Sim2Sim 验证</strong><p>在 Isaac Gym 与 MuJoCo 中检查策略运动行为。</p></li>
+        <li><b>03</b><strong>打通控制链路</strong><p>修复 LCM 接口与消息格式，适配 SDK 与底层 PD。</p></li>
+        <li><b>04</b><strong>真机调参</strong><p>实现前后及侧向运动，并用遥控器调节抬腿高度、步频、机身俯仰及腿间距。</p></li>
+      </ol>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="wrap footer-grid">
+      <div><div class="eyebrow">CONTACT</div><h2>辛波</h2><p>浙江工业大学 · 控制科学与工程硕士</p><a href="mailto:2495433518@qq.com">2495433518@qq.com</a></div>
+      <div class="research"><h3>科研成果</h3><p><i>Learning Multitask Policy for Quadruped via Orthogonal Feature Decoupling</i><br>学生第一作者 · 投稿中</p><p>一种机器人步态控制方法<br>第一发明人 · 已受理</p></div>
+      <a class="pdf-link" href="portfolio.pdf" download="辛波_机器人作品集.pdf">下载 PDF 作品集 ↓</a>
+    </div>
+  </footer>
+  <dialog id="figure-dialog" aria-labelledby="figure-title">
+    <div class="dialog-head"><strong id="figure-title"></strong><button type="button" id="close-figure">关闭 <span aria-hidden="true">×</span></button></div>
+    <img id="figure-image" alt="">
+  </dialog>
+</body>
+</html>
